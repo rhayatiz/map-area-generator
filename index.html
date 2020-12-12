@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Crousty</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="main">
+            <div id="map-wrap">
+            <img src="./img/krusty.png" width="300" alt="Planets" usemap="#main-map">
+            <map id="main-map" name="main-map" style="position:absolute">
+            </map>
+            </div>
+            
+
+            <div id="main-objects">
+                <div>Liste des objets</div>
+                <div class="flex f-between">
+                    <div>Visualisation des aires</div>
+                    <input id="visualise" type="checkbox" onchange="refreshVisualiser(this)">
+                </div>
+                <div id="objects-list">
+                </div>
+            </div>
+        </div>
+
+        <div id="option-list">
+            <div class="option">
+                <label for="nom">Nom de l'élément</label>
+                <input id="inputNom" type="text" name="nom">
+            </div>
+
+            <div class="option">
+                <label for="type">Type de l'élément</label>
+                <select name="type" id="inputType" onchange="refreshType()">
+                    <option value=""></option>
+                    <option value="circle">Cercle (non developpé)</option>
+                    <option value="rect">Rectangle</option>
+                </select>
+            </div>
+
+            <div id="divX" class="option d-none">
+                <label for="inputX">Coordonnée X</label>
+                <input id="inputX" type="number" name="inputX">
+            </div>
+
+            <div id="divY" class="option d-none">
+                <label for="inputY">Coordonnée Y</label>
+                <input id="inputY" type="number" name="inputY">
+            </div>
+
+            <div id="divRadius" class="option d-none">
+                <label for="inputRadius">Rayon</label>
+                <input id="inputRadius" type="number" name="inputRadius">
+            </div>
+
+            <div id="divWidth" class="option d-none">
+                <label for="width">Largeur</label>
+                <input id="inputWidth" type="number" name="width">
+            </div>
+
+            <div id="divHeight" class="option d-none">
+                <label for="height">Hauteur</label>
+                <input id="inputHeight" type="number" name="height">
+            </div>
+            
+
+
+            <div id="arrows" class="option d-none">
+                <span id="up">
+                    <i class="fas fa-arrow-up"></i>
+                </span>
+
+                <span id="down">
+                    <i class="fas fa-arrow-down"></i>
+                </span>
+
+                <span id="right">
+                    <i class="fas fa-arrow-right"></i>
+                </span>
+
+                <span id="left">
+                    <i class="fas fa-arrow-left"></i>
+                </span>
+            </div>
+
+            <div id="btns" class="flex-between d-none">
+                <a id="cancel" class="btn" onclick="reset()">Annuler</a>
+                <a id="apply" class="btn" onclick="apply()">Appliquer</a>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="./js/script.js"></script>
+</body>
+</html>
