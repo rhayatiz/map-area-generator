@@ -5,10 +5,17 @@ body, html {
     height: 100%;
 }
 
+input {
+    border: 1px solid rgb(95, 95, 219);
+    border-radius: 1em;
+    padding: 0em 10px !important; 
+    background-color: rgb(233, 233, 233);
+}
+
 #wrapper {
-    padding-top: 20px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    height: 100vh;
 }
 
 #option-list {
@@ -21,8 +28,6 @@ body, html {
 }
 
 #main-objects {
-    background-color: teal;
-    height: auto;
     padding: 5px;
 }
 
@@ -107,10 +112,7 @@ i:hover {
 }
 
 #objects-list {
-    background-color: rgb(213, 213, 255);
     max-height: 200px;
-    overflow-y: scroll;
-    width: 300px;
 }
 
 .object-item {
@@ -135,7 +137,20 @@ i:hover {
     transform: scale(1.3);
 }
 
+td {
+    padding: 5px 10px;
+}
+
 .visuel {
     position: absolute;
     z-index: 4;
+}
+
+.visuel:hover {
+    background-color: rgba(248, 156, 156, 0.342);
+    cursor: grab;
+}
+
+.circle {
+    border-radius: 100%;
 }

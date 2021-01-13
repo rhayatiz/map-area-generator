@@ -4,100 +4,194 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/tailwind.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <title>Crousty</title>
 </head>
-<body>
+<body class="bg-grey-100">
     <div id="wrapper">
-        <div id="main">
-            <div id="map-wrap">
+        <div id="main" class="w-full h-full">
+            <div id="map-wrap" class="ml-6">
             <img src="./img/krusty.png" width="300" alt="Planets" usemap="#main-map">
             <map id="main-map" name="main-map" style="position:absolute">
             </map>
             </div>
             
 
-            <div id="main-objects">
+            <div id="main-objects" class=" bg-purple-400">
                 <div>Liste des objets</div>
                 <div class="flex f-between">
                     <div>Visualisation des aires</div>
                     <input id="visualise" type="checkbox" onchange="refreshVisualiser(this)">
                 </div>
-                <div id="objects-list">
+                <div class="overflow-y-scroll">
+                    <table class="w-full">
+                        <thead class="bg-purple-300">
+                            <tr class="">
+                                <td>id</td>
+                                <td>nom</td>
+                                <td>type</td>
+                                <td>(X,Y)</td>
+                                <td class="text-right">options</td>
+                            </tr>
+                        </thead>
+                        <tbody id="objects-list" class="bg-purple-200">
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <div id="option-list">
-            <div class="option">
-                <label for="nom">Nom de l'élément</label>
-                <input id="inputNom" type="text" name="nom">
+        <div id="option-list-create" class="bg-indigo-100">
+            <div id="option-list-nav" class="h-12 bg-green-300">
+                <div class="option-list-nav-item text-center pt-2">Créer un élément</div>
             </div>
 
-            <div class="option">
+            <div id="option-list-wrapper" class="px-5">
+            <div id="option-create">
+
+                <div class="option">
                 <label for="type">Type de l'élément</label>
                 <select name="type" id="inputType" onchange="refreshType()">
-                    <option value=""></option>
-                    <option value="circle">Cercle (non developpé)</option>
-                    <option value="rect">Rectangle</option>
+                <option value=""></option>
+                <option value="circle">Cercle</option>
+                <option value="rect">Rectangle</option>
                 </select>
-            </div>
+                </div>
 
-            <div id="divX" class="option d-none">
+                <div class="option">
+                <label for="nom">Nom de l'élément</label>
+                <input id="inputNom" type="text" name="nom">
+                </div>
+
+                <div id="divX" class="option d-none">
                 <label for="inputX">Coordonnée X</label>
                 <input id="inputX" type="number" name="inputX">
-            </div>
-
-            <div id="divY" class="option d-none">
+                </div>
+                
+                <div id="divY" class="option d-none">
                 <label for="inputY">Coordonnée Y</label>
                 <input id="inputY" type="number" name="inputY">
-            </div>
-
-            <div id="divRadius" class="option d-none">
-                <label for="inputRadius">Rayon</label>
+                </div>
+                
+                <div id="divRadius" class="option d-none">
+                <label for="inputRadius">Rayon</label><br>
                 <input id="inputRadius" type="number" name="inputRadius">
-            </div>
-
-            <div id="divWidth" class="option d-none">
+                </div>
+                
+                <div id="divWidth" class="option d-none">
                 <label for="width">Largeur</label>
                 <input id="inputWidth" type="number" name="width">
-            </div>
-
-            <div id="divHeight" class="option d-none">
+                </div>
+                
+                <div id="divHeight" class="option d-none">
                 <label for="height">Hauteur</label>
                 <input id="inputHeight" type="number" name="height">
-            </div>
-            
-
-
-            <div id="arrows" class="option d-none">
+                </div>
+                
+                <div id="arrows" class="option d-none">
                 <span id="up">
-                    <i class="fas fa-arrow-up"></i>
+                <i class="fas fa-arrow-up"></i>
                 </span>
-
+                
                 <span id="down">
-                    <i class="fas fa-arrow-down"></i>
+                <i class="fas fa-arrow-down"></i>
                 </span>
-
+                
                 <span id="right">
-                    <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-arrow-right"></i>
                 </span>
-
+                
                 <span id="left">
-                    <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-left"></i>
                 </span>
-            </div>
-
-            <div id="btns" class="flex-between d-none">
+                </div>
+                
+                <div id="btns" class="flex-between d-none">
                 <a id="cancel" class="btn" onclick="reset()">Annuler</a>
                 <a id="apply" class="btn" onclick="apply()">Appliquer</a>
+                </div>
             </div>
+            </div>
+        </div>  
+
+        <div id="option-list-edit" class="bg-indigo-100 d-none">
+            <div id="option-list-nav" class="h-12 bg-yellow-300">
+                <div class="option-list-nav-item text-center pt-2">Modifier un élément</div>
+            </div>
+
+            <div id="option-list-wrapper" class="px-5">
+            <div id="option-create">
+
+                <input type="hidden" id="changeId" value="">
+
+                <div class="option">
+                <label for="nom">Nom de l'élément</label>
+                <input id="changeNom" type="text" name="changeNom">
+                </div>
+                
+                <div class="option">
+                <label for="type">Type de l'élément</label>
+                <input id="changeType" type="text" name="changeType" readonly>
+                </div>
+                
+                <div id="" class="option">
+                <label for="changeX">Coordonnée X</label>
+                <input id="changeX" type="number" name="changeX">
+                </div>
+                
+                <div id="" class="option">
+                <label for="changeY">Coordonnée Y</label>
+                <input id="changeY" type="number" name="changeY">
+                </div>
+                
+                <div id="" class="option hidden">
+                <label for="changeRadius">Rayon</label>
+                <input id="changeRadius" type="number" name="changeRadius">
+                </div>
+                
+                <div id="" class="option hidden">
+                <label for="changeWidth">Largeur</label>
+                <input id="changeWidth" type="number" name="changeWidth">
+                </div>
+                
+                <div id="" class="option hidden">
+                <label for="changeHeight">Hauteur</label>
+                <input id="changeHeight" type="number" name="changeHeight">
+                </div>
+                
+                <div id="arrows" class="option">
+                <span id="up">
+                <i class="fas fa-arrow-up"></i>
+                </span>
+                
+                <span id="down">
+                <i class="fas fa-arrow-down"></i>
+                </span>
+                
+                <span id="right">
+                <i class="fas fa-arrow-right"></i>
+                </span>
+                
+                <span id="left">
+                <i class="fas fa-arrow-left"></i>
+                </span>
+                </div>
+                
+                <div id="btnsEdit" class="flex-between">
+                <a id="cancelEdit" class="btn border-2 border-yellow-300" onclick="resetEdit()">Annuler</a>
+                <a id="applyEdit" class="btn bg-yellow-300" onclick="applyEdit()">Appliquer</a>
+                </div>
+            </div>
+            </div>
+        </div> 
         </div>
 
     </div>
 
 
-
+    <script src="./js/interface.js"></script>
     <script src="./js/script.js"></script>
 </body>
 </html>
