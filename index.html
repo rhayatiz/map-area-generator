@@ -22,7 +22,7 @@
                 <div>Liste des objets</div>
                 <div class="flex f-between">
                     <div>Visualisation des aires</div>
-                    <input id="visualise" type="checkbox" onchange="refreshVisualiser(this)">
+                    <input id="visualise" type="checkbox" onchange="refreshVisualiser()">
                 </div>
                 <div class="overflow-y-scroll">
                     <table class="w-full">
@@ -62,35 +62,35 @@
 
                 <div class="option">
                 <label for="nom">Nom de l'élément</label>
-                <input id="inputNom" type="text" name="nom">
+                <input id="inputNom" type="text" name="nom" value="OBJET1">
                 </div>
 
                 <div id="divX" class="option d-none">
                 <label for="inputX">Coordonnée X</label>
-                <input id="inputX" type="number" name="inputX">
+                <input id="inputX" type="number" name="inputX" value="60">
                 </div>
                 
                 <div id="divY" class="option d-none">
                 <label for="inputY">Coordonnée Y</label>
-                <input id="inputY" type="number" name="inputY">
+                <input id="inputY" type="number" name="inputY" value="23">
                 </div>
                 
                 <div id="divRadius" class="option d-none">
                 <label for="inputRadius">Rayon</label><br>
-                <input id="inputRadius" type="number" name="inputRadius">
+                <input id="inputRadius" type="number" name="inputRadius" value="40">
                 </div>
                 
                 <div id="divWidth" class="option d-none">
                 <label for="width">Largeur</label>
-                <input id="inputWidth" type="number" name="width">
+                <input id="inputWidth" type="number" name="width" value="100">
                 </div>
                 
                 <div id="divHeight" class="option d-none">
                 <label for="height">Hauteur</label>
-                <input id="inputHeight" type="number" name="height">
+                <input id="inputHeight" type="number" name="height" value="60">
                 </div>
                 
-                <div id="arrows" class="option d-none">
+                <div id="arrows" class="option d-none" style="display:none;">
                 <span id="up">
                 <i class="fas fa-arrow-up"></i>
                 </span>
@@ -108,7 +108,7 @@
                 </span>
                 </div>
                 
-                <div id="btns" class="flex-between d-none">
+                <div id="btns" class="flex-between mt-4 d-none">
                 <a id="cancel" class="btn" onclick="reset()">Annuler</a>
                 <a id="apply" class="btn" onclick="apply()">Appliquer</a>
                 </div>
@@ -138,43 +138,43 @@
                 
                 <div id="" class="option">
                 <label for="changeX">Coordonnée X</label>
-                <input id="changeX" type="number" name="changeX">
+                <input id="changeX" type="number" name="changeX" onchange="refreshDiv(this)">
                 </div>
                 
                 <div id="" class="option">
                 <label for="changeY">Coordonnée Y</label>
-                <input id="changeY" type="number" name="changeY">
+                <input id="changeY" type="number" name="changeY" onchange="refreshDiv(this)">
                 </div>
                 
                 <div id="" class="option hidden">
                 <label for="changeRadius">Rayon</label>
-                <input id="changeRadius" type="number" name="changeRadius">
+                <input id="changeRadius" type="number" name="changeRadius" onchange="refreshDiv(this)">
                 </div>
                 
                 <div id="" class="option hidden">
                 <label for="changeWidth">Largeur</label>
-                <input id="changeWidth" type="number" name="changeWidth">
+                <input id="changeWidth" type="number" name="changeWidth" onchange="refreshDiv(this)">
                 </div>
                 
                 <div id="" class="option hidden">
                 <label for="changeHeight">Hauteur</label>
-                <input id="changeHeight" type="number" name="changeHeight">
+                <input id="changeHeight" type="number" name="changeHeight" onchange="refreshDiv(this)">
                 </div>
                 
                 <div id="arrows" class="option">
-                <span id="up">
+                <span id="up" onclick="moveDiv(this)">
                 <i class="fas fa-arrow-up"></i>
                 </span>
                 
-                <span id="down">
+                <span id="down" onclick="moveDiv(this)">
                 <i class="fas fa-arrow-down"></i>
                 </span>
                 
-                <span id="right">
+                <span id="right" onclick="moveDiv(this)">
                 <i class="fas fa-arrow-right"></i>
                 </span>
                 
-                <span id="left">
+                <span id="left" onclick="moveDiv(this)">
                 <i class="fas fa-arrow-left"></i>
                 </span>
                 </div>

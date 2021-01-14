@@ -1,3 +1,10 @@
+/***********
+ * VARIABLES
+ */
+
+//Sauvegarde temporaire de l'area
+var editMode = false;
+
 
 /***********************************************************************
  * Bouton Appliquer
@@ -64,6 +71,9 @@ function apply(){
     }
     //Vider les champs
     reset();
+    //afficher les DIV
+    refreshVisualiser('show');
+
 }
 
 /******************************************************************************
@@ -136,8 +146,11 @@ function render(aire){
 /*****************************************************************
  * Checkbox visualisation des <div> visuelles sur la map 
  */
-function refreshVisualiser(e){
-    if(e.checked){
+function refreshVisualiser(action = null){
+    if (document.getElementById('visualise').checked){
+        action = 'show';
+    }
+    if(action == 'show'){
         //Afficher les Div correspondants au areas
         let boxes = document.getElementsByClassName("visuel");
         for (let i = 0; i < boxes.length; i++){
@@ -233,6 +246,12 @@ function dragElement(div) {
   }
 
   function elementDrag(e) {
+    let aireId = e.target.id.substr(6);
+    //ouvrir le mode Edit quand on fait bouger la DIV
+    if (!editMode){
+        btnEditAire(aireId);
+    }
+
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
@@ -253,11 +272,17 @@ function dragElement(div) {
     let area = Map.getArea(div.dataset.area);
     //Pour un cercle, on rajoute le rayon, ( car le centre d'un <area> circle est le centre du cercle, pour un rectangle c'est le point coin haut gauche)
     if (area.typeAire == 'circle'){
-        area.setXY(parseFloat(newLeft) + parseFloat(area.radius), parseFloat(newTop) + parseFloat(area.radius));
+        let newX = parseFloat(newLeft) + parseFloat(area.radius);
+        let newY = parseFloat(newTop) + parseFloat(area.radius);
+        console.log('affecter XY au changeX , newX = '+newX);
+        console.log(document.getElementById('changeX'));
+        document.getElementById('changeX').value = newX;
+        document.getElementById('changeY').value = newY;
     }else if (area.typeAire == 'rect'){
-        area.setXY(newLeft , newTop);
+        document.getElementById('changeX').value = newLeft;
+        document.getElementById('changeY').value = newTop;
     }
-    refreshHTML(area);
+    // refreshHTML(area);
   }
 
   function closeDragElement() {
@@ -331,27 +356,75 @@ function applyEdit(){
         refreshHTML(area);
     }
 
+    
+    editMode = false;
+
 }
 
-//TODO
-// EDIT DYNAMIQUE
-// window.onload = init();
-// function init(){
-//     let changeInputs = [
-//         'changeNom',
-//         'changeHeight',
-//         'changeWidth',
-//         'changeRadius',
-//         'changeX',
-//         'changeY',
-//     ];
-//     for (let changeInput of changeInputs){
-//         document.getElementById(changeInput).addEventListener("change", applyEdit());
-//     } 
-// };
+/*****************************************************************************************************************************
+ * Modification Dynamique d'un objet, apellée quand l'event onChange est declenché sur les input du formulaire de modification
+ * Ces modifications sont reinitialisés grâce au refreshHTML(aire) dans la function resetEdit() 
+ */
+function refreshDiv(e){
+    let objetId = e.parentElement.parentElement.childNodes[1].value;
+    let nom = document.getElementById('changeNom').value;
+    let x = document.getElementById('changeX').value;
+    let y = document.getElementById('changeY').value;
+    let type = document.getElementById('changeType').value;
 
+    // Si l'objet area est un rectagne
+    if (type == 'rect'){
+        let vis = document.getElementById('')
+        let height = document.getElementById('changeHeight').value;
+        let width = document.getElementById('changeWidth').value;
+        //refresh Div visual ONLY
+        var left = x;
+        var top = y;
+        var w = width;
+        var h = height;
 
+    // Si l'objet area est un cercle
+    }else if (type == 'circle'){
+        let radius = document.getElementById('changeRadius').value;
+        //MAJ Objet
+        var left = x - radius;
+        var top = y - radius;
+        var w = radius * 2;
+        var h = radius * 2;
+    }
 
+    let vis = document.getElementById('visuel'+objetId);
+    vis.style.top = top+'px';
+    vis.style.left = left+'px';
+    vis.style.width = w+'px';
+    vis.style.height = h+'px';
+}
+
+/**************************************************************************************
+ * fonction pour gérer le déplacement de la div visuelle quand on click sur les flèches
+ */
+function moveDiv(e){
+    let direction = e.id;
+    let x = parseFloat(document.getElementById('changeX').value);
+    let y = parseFloat(document.getElementById('changeY').value);
+    var el;
+    if (direction == 'up'){
+        el = document.getElementById('changeY');
+        el.value = y - 1;
+    }else if(direction == 'down'){
+        el = document.getElementById('changeY');
+        el.value = y + 1;
+    }else if(direction == 'right'){
+        el = document.getElementById('changeY');
+        el.value = x +1;
+    }else if(direction == 'left'){
+        el = document.getElementById('changeY');
+        el.value = x - 1;
+    }
+
+    el.dispatchEvent(new Event("change"));
+
+}
 
 
 
@@ -424,6 +497,11 @@ function reset() {
  * Bouton  Annuler (modification), on vide les champs
  */
 function resetEdit() {
+    //Reinitialiser l'état de l'objet
+    refreshHTML(Map.getArea(document.getElementById('changeId').value));
+    //vider la variable temporaire
+    areaTemp = null;
+
     document.getElementById('option-list-create').classList.remove('d-none');
     document.getElementById('option-list-edit').classList.add('d-none');
 
@@ -438,6 +516,8 @@ function resetEdit() {
     document.getElementById('changeWidth').parentElement.classList.add('hidden');
     document.getElementById('changeHeight').parentElement.classList.add('hidden');
     document.getElementById('changeRadius').parentElement.classList.add('hidden');
+
+    editMode = false;
 }
 
 
@@ -445,16 +525,21 @@ function resetEdit() {
  * Bouton modifier : Affiche le formulaire et le remplit avec les données de l'objet modifié
  */
 function btnEditAire(id){
+    editMode = true;
     document.getElementById('option-list-create').classList.add('d-none');
     document.getElementById('option-list-edit').classList.remove('d-none');
 
     //Récupérer l'objet Area
     let area = Map.getArea(id);
+    areaTemp = area;
+    //Sauvegarder L'area
+    
     //Remplir le formulaire avec les infos de l'aire
     document.getElementById('changeNom').value = area.nom;
     document.getElementById('changeX').value = area.getX();
     document.getElementById('changeY').value = area.getY();
     document.getElementById('changeId').value = area.id;
+    document.getElementById('changeType').value = area.typeAire;
     // Si l'objet area est un rectagne
     if (area.typeAire == 'rect'){
         document.getElementById('changeHeight').parentElement.classList.remove('hidden');
