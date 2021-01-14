@@ -415,10 +415,10 @@ function moveDiv(e){
         el = document.getElementById('changeY');
         el.value = y + 1;
     }else if(direction == 'right'){
-        el = document.getElementById('changeY');
+        el = document.getElementById('changeX');
         el.value = x +1;
     }else if(direction == 'left'){
-        el = document.getElementById('changeY');
+        el = document.getElementById('changeX');
         el.value = x - 1;
     }
 
