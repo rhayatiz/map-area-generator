@@ -539,6 +539,10 @@ function reset() {
     for (let i = 0; i < pTemp.length ; i++) {
         pTemp[i].remove();
     }
+    //supprimer le polygone SVG
+    if(document.getElementById('polyDisplay')){
+        document.getElementById('polyDisplay').parentNode.removeChild(document.getElementById('polyDisplay'));
+    };
 }
 
 /***************************************************
@@ -564,6 +568,7 @@ function resetEdit() {
     document.getElementById('changeWidth').parentElement.classList.add('hidden');
     document.getElementById('changeHeight').parentElement.classList.add('hidden');
     document.getElementById('changeRadius').parentElement.classList.add('hidden');
+
 
     editMode = false;
 }
@@ -662,7 +667,7 @@ function visualisePoly(){
     coords = coords.trim();
     viewBox = viewBox.join(' ');
 
-    let poly = "<svg viewBox='"+viewBox+"' xmlns='http://www.w3.org/2000/svg'>";
+    let poly = "<svg id='polyDisplay' viewBox='"+viewBox+"' xmlns='http://www.w3.org/2000/svg'>";
     poly += "<polygon points='"+coords+"' fill='none' stroke='black' />";
     poly += "</svg>";
     document.getElementById('polyWrapper').innerHTML = poly;
