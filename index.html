@@ -12,7 +12,11 @@
     <div id="wrapper">
         <div id="main" class="w-full h-full">
             <div id="map-wrap" class="ml-6">
-            <img src="./img/krusty.png" width="300" alt="Planets" usemap="#main-map">
+                <div id="polyWrapper"></div>
+                <label id="uploadImgLabel" for="uploadImg"><i class="fas fa-upload blue-300"></i></label>
+                <input onchange="getImg(this);" type="file" name="uploadImg" id="uploadImg"  accept="image/png, image/jpeg, image/gif">
+                <a id="uploadImg"></a>
+            <img id="main-img" src="./img/krusty.png" width="300" alt="Planets" usemap="#main-map">
             <map id="main-map" name="main-map" style="position:absolute">
             </map>
             </div>
@@ -57,10 +61,11 @@
                 <option value=""></option>
                 <option value="circle">Cercle</option>
                 <option value="rect">Rectangle</option>
+                <option value="poly">Polygone</option>
                 </select>
                 </div>
 
-                <div class="option">
+                <div id="divNom" class="option d-none">
                 <label for="nom">Nom de l'élément</label>
                 <input id="inputNom" type="text" name="nom" value="OBJET1">
                 </div>
@@ -88,6 +93,37 @@
                 <div id="divHeight" class="option d-none">
                 <label for="height">Hauteur</label>
                 <input id="inputHeight" type="number" name="height" value="60">
+                </div>
+
+                <div id="divPolyPoints" class="option d-none mt-2">
+                    <div class="flex align-middle">
+                        <div class="align-middle">
+                            Points polygone
+                        </div>
+
+                    <div class=" m-3"><span id="divPolyBtns" class="d-none ml-auto bg-blue-200 rounded p-3 hover:bg-blue-300 cursor-pointer" onclick="addPolyPoint()">Ajouter +</span></div>
+
+                    </div>
+                    <form id="formPolyPoints" onchange="visualisePoly()">
+                    <div>(x0,y0)
+                        <input class="w-20" id="polyX0" type="number" name="polyX0" value="3">
+                        <input class="w-20" id="polyY0" type="number" name="polyY0" value="4">
+                    </div>
+
+                    
+                    <div>(x1,y1)
+                        <input class="w-20" id="polyX1" type="number" name="polyX1" value="10">
+                        <input class="w-20" id="polyY1" type="number" name="polyY1" value="12">
+                    </div>
+
+                    
+                    <div>(x2,y2)
+                        <input class="w-20" id="polyX2" type="number" name="polyX2" value="24">
+                        <input class="w-20" id="polyY2" type="number" name="polyY2" value="50">
+                    </div>
+                    </form>
+
+
                 </div>
                 
                 <div id="arrows" class="option d-none" style="display:none;">

@@ -4,7 +4,8 @@
 
 //Sauvegarde temporaire de l'area
 var editMode = false;
-
+//Nombre de points polygone (= 0) quand on refreshvisualiser()
+var nbPolyPoints = 0;
 
 /***********************************************************************
  * Bouton Appliquer
@@ -434,13 +435,42 @@ function moveDiv(e){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////Interactions user DOM--------- boutons appliquer, annuler etc ..      ////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Modification de la position de l'élément avec les touches du clavier, seulement si editMode est actif
+ */
+document.onkeydown = function(e) {
+    if (editMode){
+        switch(e.which) {
+            case 37: // left
+            moveDiv(document.getElementById('left'));
+            break;
+
+            case 38: // up
+            moveDiv(document.getElementById('up'));
+            break;
+
+            case 39: // right
+            moveDiv(document.getElementById('right'));
+            break;
+
+            case 40: // down
+            moveDiv(document.getElementById('down'));
+            break;
+
+            default: return;
+        }
+        e.preventDefault(); 
+    }
+};
+
+
 /*
  * Rafraichir les données du formulaire selon l'option choisie dans le <select>
  */
 function refreshType(){
     n = document.getElementById("inputType").selectedIndex;
     let objectType = document.getElementById("inputType").options[n].value;
-    let hideInputs = ['divWidth','divHeight', 'divRadius', 'divX', 'divY', 'btns', 'arrows'];
+    let hideInputs = ['divNom','divWidth','divHeight', 'divRadius', 'divX', 'divY', 'btns', 'arrows', 'divPolyPoints','divPolyBtns'];
     //hide hideInputs
     hideInputs.forEach(el => {
         if(!document.getElementById(el).classList.contains("d-none")){
@@ -460,23 +490,34 @@ function refreshType(){
             showButtons();
             break;
 
+        case "poly":
+            nbPolyPoints = 3;
+            document.getElementById("divPolyPoints").classList.remove("d-none");
+            document.getElementById("divPolyBtns").classList.remove("d-none");
+            showButtons();
         default:
             break;
     }
 }
 
 function showButtons() {
+    //Remplissage du formulaire de création avec des fausses valeurs
+
+
     document.getElementById("btns").classList.remove("d-none");
+    document.getElementById("divNom").classList.remove("d-none");
     document.getElementById("divX").classList.remove("d-none");
     document.getElementById("divY").classList.remove("d-none");
     document.getElementById("arrows").classList.remove("d-none");
 }
 
 function hideButtons() {
+    document.getElementById("divNom").classList.add("d-none");
     document.getElementById("btns").classList.add("d-none");
     document.getElementById("divX").classList.add("d-none");
     document.getElementById("divY").classList.add("d-none");
     document.getElementById("arrows").classList.add("d-none");
+    
 }
 
 
@@ -489,8 +530,15 @@ function reset() {
     document.getElementById("inputX").value = '';
     document.getElementById("inputWidth").value = '';
     document.getElementById("inputHeight").value = '';
+    document.getElementById("inputRadius").value = '';
     document.getElementById("inputType").selectedIndex = 0;
     refreshType();
+
+    //Cas type == poly, supprimer les points de visualisation
+    let pTemp = document.querySelectorAll('[id^="polyPointTemp"]');
+    for (let i = 0; i < pTemp.length ; i++) {
+        pTemp[i].remove();
+    }
 }
 
 /***************************************************
@@ -552,3 +600,117 @@ function btnEditAire(id){
         document.getElementById('changeRadius').value = area.radius;
     }
 }
+
+function visualisePoly(){
+    let form = this.event.target.form;
+    let listInputs = form.elements;
+    let len = parseInt(form.elements.length) / 2;
+    let listPoints = [];
+    for (let i = 0; i < len; i++) {
+        listPoints[i] = new objetPoint(listInputs["polyX"+i].value,  listInputs["polyY"+i].value);
+
+
+        //VISUALISER LES POINTS
+        let p = document.getElementById("polyPointTemp"+i);
+        if (p != null){
+            p.style.top = listPoints[i].y +'px';
+            p.style.left = listPoints[i].x +'px';
+            p.style.width = p.style.height = '8px';
+        }else{
+            let div = document.createElement('div');
+            div.setAttribute('class', 'polyPointTemp');
+            div.setAttribute('id', 'polyPointTemp'+i);
+            div.style.top = listPoints[i].y +'px';
+            div.style.left = listPoints[i].x +'px';
+            div.style.width = div.style.height = '8px';
+            
+            document.getElementById("map-wrap").appendChild(div);
+        }
+        
+    }
+    /********************
+     * visualise polygon
+     */
+    let viewBox = [
+        200,
+        200,
+        0,
+        0
+    ];
+    let coords = '';
+    listPoints.forEach(el => {
+        coords += el.toString()+ ' ';
+
+        //viewbox
+        if(el.x < viewBox[0]){
+            viewBox[0] = el.x;
+            viewBox[2] = el.y-viewBox[0];
+        }
+        if(el.y < viewBox[1]){
+            viewBox[1] = el.y;
+            viewBox[3] = el.x-viewBox[1];
+        }
+        if((el.y-viewBox[0]) > viewBox[2]){
+            viewBox[2] = el.y-viewBox[0];
+            
+        }
+        if((el.x-viewBox[1]) > viewBox[3]){
+            viewBox[3] = el.x-viewBox[1];
+        }
+
+    });
+    coords = coords.trim();
+    viewBox = viewBox.join(' ');
+
+    let poly = "<svg viewBox='"+viewBox+"' xmlns='http://www.w3.org/2000/svg'>";
+    poly += "<polygon points='"+coords+"' fill='none' stroke='black' />";
+    poly += "</svg>";
+    document.getElementById('polyWrapper').innerHTML = poly;
+}
+
+/**
+ * Pendant la création d'un poly ... Ajouter un point(x,y) dans le formulaire
+ */
+function addPolyPoint(){
+    nbPolyPoints++;
+    indexPoint = nbPolyPoints - 1;
+    let div = document.createElement('div');
+    let x = document.createElement('input');
+    let y = document.createElement('input');
+    Object.assign(x, {
+        id: 'polyX'+indexPoint,
+        name: 'polyX'+indexPoint,
+        value: '33',
+        className: 'w-20',
+        class: 'w-20',
+        type: 'number',
+      });
+
+      Object.assign(y, {
+        id: 'polyY'+indexPoint,
+        name: 'polyY'+indexPoint,
+        value: '33',
+        className: 'w-20',
+        type: 'number',
+      });
+
+      div.innerText = '(x'+indexPoint+',y'+indexPoint+')';
+      div.appendChild(x);
+      div.appendChild(y)
+      document.getElementById("formPolyPoints").appendChild(div);
+
+}
+
+/**
+ * Récupération de l'image
+ */
+function getImg(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+          console.log(document.getElementById('main-img'));
+        document.getElementById('main-img').setAttribute('src', e.target.result);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }

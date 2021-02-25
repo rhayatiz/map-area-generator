@@ -154,3 +154,24 @@ td {
 .circle {
     border-radius: 100%;
 }
+
+.polyPointTemp {
+    background-color: blueviolet;
+    position: absolute;
+    border-radius: 50%;
+}
+
+#uploadImgLabel {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+#uploadImg {
+    display: none;
+}
+
+#polyWrapper {
+    position: absolute;
+}

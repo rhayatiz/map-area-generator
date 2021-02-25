@@ -52,7 +52,7 @@ function objetPoint(x, y){
         y = newY;
     },
     objetPoint.toString = function(){
-        console.log('--objetPoint : X:'+x+'; Y:'+y);
+        return x+','+y;
     }
     return objetPoint;
 }
